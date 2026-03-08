@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List App - CRUD Operations</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-brand">
+                <h1>📝 Todo List Manager</h1>
+                <p>Master your tasks with CRUD operations</p>
+            </div>
+            <div class="navbar-stats">
+                <span class="stat">Total: <strong id="total-todos">0</strong></span>
+                <span class="stat">Completed: <strong id="completed-todos">0</strong></span>
+                <span class="stat">Pending: <strong id="pending-todos">0</strong></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container main-content">
+        <div class="layout">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-card">
+                    <h3>Quick Stats</h3>
+                    <div class="progress-section">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                        <p id="progress-text">0% Complete</p>
+                    </div>
+                </div>
+
+                <div class="sidebar-card">
+                    <h3>Filters</h3>
+                    <button class="filter-btn active" onclick="filterTodos('all')">All Tasks</button>
+                    <button class="filter-btn" onclick="filterTodos('pending')">Pending</button>
+                    <button class="filter-btn" onclick="filterTodos('completed')">Completed</button>
+                    <button class="filter-btn" onclick="filterTodos('today')">Today</button>
+                </div>
+
+                <div class="sidebar-card">
+                    <h3>Categories</h3>
+                    <button class="category-btn" onclick="filterByCategory('all')">All</button>
+                    <button class="category-btn" onclick="filterByCategory('work')">🏢 Work</button>
+                    <button class="category-btn" onclick="filterByCategory('personal')">👤 Personal</button>
+                    <button class="category-btn" onclick="filterByCategory('shopping')">🛒 Shopping</button>
+                    <button class="category-btn" onclick="filterByCategory('health')">❤️ Health</button>
+                </div>
+
+                <div class="sidebar-card danger">
+                    <button class="btn btn-danger full-width" onclick="clearAllTodos()">
+                        🗑️ Clear All
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main">
+                <!-- Add Todo Form -->
+                <section class="add-todo-section">
+                    <h2>Add New Task</h2>
+                    <form id="add-todo-form" class="form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Task Title *</label>
+                                <input type="text" id="title" placeholder="Enter task title..." required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea id="description" placeholder="Enter task description..." rows="3"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Category</label>
+                                <select id="category">
+                                    <option value="work">🏢 Work</option>
+                                    <option value="personal">👤 Personal</option>
+                                    <option value="shopping">🛒 Shopping</option>
+                                    <option value="health">❤️ Health</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Priority</label>
+                                <select id="priority">
+                                    <option value="low">🟢 Low</option>
+                                    <option value="medium">🟡 Medium</option>
+                                    <option value="high">🔴 High</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Due Date</label>
+                                <input type="date" id="due-date">
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">➕ Add Task</button>
+                            <button type="reset" class="btn btn-secondary">Clear</button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Search and Sort -->
+                <section class="search-sort-section">
+                    <div class="search-box">
+                        <input type="text" id="search-input" placeholder="🔍 Search tasks..." class="search-input">
+                    </div>
+
+                    <div class="sort-options">
+                        <select id="sort-select" class="sort-select">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="priority-high">Priority: High to Low</option>
+                            <option value="priority-low">Priority: Low to High</option>
+                            <option value="due-date">Due Date</option>
+                        </select>
+                    </div>
+                </section>
+
+                <!-- Todos List -->
+                <section class="todos-section">
+                    <h2>My Tasks</h2>
+                    <div class="todos-list" id="todos-list">
+                        <!-- Todos will be inserted here -->
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Edit Todo Modal -->
+    <div class="modal" id="edit-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Task</h2>
+                <button class="close-modal" onclick="closeEditModal()">✕</button>
+            </div>
+
+            <form id="edit-form" class="form">
+                <input type="hidden" id="edit-id">
+
+                <div class="form-group">
+                    <label>Title *</label>
+                    <input type="text" id="edit-title" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="edit-description" rows="3"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="edit-category">
+                            <option value="work">🏢 Work</option>
+                            <option value="personal">👤 Personal</option>
+                            <option value="shopping">🛒 Shopping</option>
+                            <option value="health">❤️ Health</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <select id="edit-priority">
+                            <option value="low">🟢 Low</option>
+                            <option value="medium">🟡 Medium</option>
+                            <option value="high">🔴 High</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Due Date</label>
+                        <input type="date" id="edit-due-date">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">💾 Save Changes</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- View Todo Modal -->
+    <div class="modal" id="view-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Task Details</h2>
+                <button class="close-modal" onclick="closeViewModal()">✕</button>
+            </div>
+
+            <div id="view-content" class="view-content">
+                <!-- Task details will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay" onclick="closeAllModals()"></div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
