@@ -5,6 +5,8 @@
 The **Todo List Manager** is a simple web application that allows users to manage their daily tasks efficiently.
 It supports **CRUD operations (Create, Read, Update, Delete)** and helps users organize tasks with categories, priorities, and due dates.
 
+Live Demo: https://to-do-list-web-app-lac-psi.vercel.app/
+
 This project was developed using **HTML, CSS, and JavaScript** and runs in the browser using **Local Storage** to save tasks.
 
 ---
